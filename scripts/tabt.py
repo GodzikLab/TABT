@@ -5,8 +5,7 @@ import csv
 
 diseases=['ibd','pso','ra','sle']
 
-#dir=os.environ['TABT_DIR']
-dir='/Users/lukaszjaroszewski/Desktop/active/tabt_2022/tabt'
+dir=os.environ['TABT_DIR']
 os.chdir(dir)
 
 def Tabt(gs,inv,interd,interc,invin,prop,tabt):
@@ -68,10 +67,11 @@ with open('data/tissues/E-MTAB-513-query-results.tpms.tsv') as f:
     tiss=list(reader)
         
 for tli in tiss:
-    tlif=list(map(lambda x: float(x or 0), tli[2:]))
-    propll[tli[1]]=(tlif[7]+tlif[10])/sum(tlif)
-    
-propllave=sum(propll.values())/len(propll)
+    if (tli[1] in gset):
+        tlif=list(map(lambda x: float(x or 0), tli[2:]))
+        propll[tli[1]]=(tlif[7]+tlif[10])/sum(tlif)
+
+propllave=sum(propll.values())/len(gset)
 
 tabtll=dict()
 
@@ -100,7 +100,6 @@ for dis in diseases:
         invgs[gli[0]]=1
     
 
-
     invinex=dict(); propex=dict(); tabtex=dict();    
     invings=dict(); propgs=dict(); tabtgs=dict();
     
@@ -110,9 +109,9 @@ for dis in diseases:
 
     for g in gset:
         #tabt[dis][g]=tabtex.get(g)
-        tabt[dis][g]=local[g]*(tabtex.get(g)+tabtgs.get(g)+tabtll.get(g))
+        tabt[dis][g]=max(local[g]*(tabtex.get(g)+tabtgs.get(g)+tabtll.get(g)),0)
     
-    with open(dis+'_tabt.tsv','w') as f: 
+    with open('results/'+dis+'_tabt.tsv','w') as f: 
         for g in gset:
             print(g,interc[g],
                   invinex[g],propex[g],tabtex[g],
@@ -122,13 +121,13 @@ for dis in diseases:
 
 
 tpercselfave=0
-with open('evaluation.tsv','w') as f:
+with open('results/evaluation.tsv','w') as f:
     for dis in diseases:
         tlen=len(tabt[dis])
         tabtperc={k:i/tlen for i,k in 
                   enumerate(sorted(tabt[dis],key=tabt[dis].get,reverse=True))}
         for distst in diseases:
-            with open(distst+'_abs.tsv') as g:
+            with open('data/abs/'+distst+'_abs.tsv') as g:
                 reader = csv.reader(g, delimiter='\t')
                 tabs=list(reader)
                 tpercave=0
