@@ -108,8 +108,7 @@ for dis in diseases:
     
 
     for g in gset:
-        #tabt[dis][g]=tabtex.get(g)
-        tabt[dis][g]=max(local[g]*(tabtex.get(g)+tabtgs.get(g)+tabtll.get(g)),0)
+        tabt[dis][g]=max(local[g]*(tabtll.get(g)+tabtgs.get(g)*0+tabtex.get(g)),0)
     
     with open('results/'+dis+'_tabt.tsv','w') as f: 
         for g in gset:
