@@ -1,5 +1,6 @@
 # TABT
 
+<pre>
 Therapeutic AntiBody Targets Score
 
 Supporting data and scripts for the manuscript:
@@ -44,5 +45,5 @@ To run TABT scripts, please create the environment variable TABT_DIR containing 
 current TABT folder e.g., by adding the following line to your .bashrc in your home folder:
 
 export TABT_DIR="_full_path_of_tabt_folder_"
-
+</pre>
 
