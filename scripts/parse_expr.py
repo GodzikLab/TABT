@@ -10,11 +10,12 @@ dir=os.environ['TABT_DIR']
 os.chdir(dir+'/data/expression')
 
 for dis in diseases:
+    print('Reading differential expression data for '+dis+'...')
     with open(dis+'_expr_files.tsv') as f:
         efns=f.readlines()
         expr_files=[efn.rstrip() for efn in efns]
 
-    
+    print('Parsing differential expression data for '+dis+'...')
     tes=dict()
     gene_count=dict()
     for efn in expr_files:
@@ -33,6 +34,7 @@ for dis in diseases:
                 gene_count[g]=1
             else:
                 gene_count[g]+=1
+    print('Saving differential expression consensus list for '+dis+'...')
     with open(dis+'_consensus.tsv','w') as f:    
         print('Gene',end='\t',file=f)
         for efn in expr_files: print(efn,end='\t',file=f)
@@ -48,3 +50,4 @@ for dis in diseases:
                     except:
                         print('NA',end='\t',file=f)
                 print(Average(avel),file=f)
+print('Done')

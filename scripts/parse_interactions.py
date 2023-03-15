@@ -4,7 +4,12 @@ import csv
 
 dir=os.environ['TABT_DIR']
 os.chdir(dir+'/data/interactions')
+print("Downloading STRING datasets...")
+os.system('curl https://stringdb-static.org/download/protein.aliases.v11.5/9606.protein.aliases.v11.5.txt.gz -O')
+os.system('curl https://stringdb-static.org/download/protein.links.v11.5/9606.protein.links.v11.5.txt.gz -O')
+os.system('gunzip --force *.v11.5.txt.gz')
 
+print("Reading protein-protein interactions data...")
 with open('9606.protein.links.v11.5.txt') as f:
     reader = csv.reader(f, delimiter=" ")
     sinter = list(reader)
@@ -13,6 +18,7 @@ with open('9606.protein.aliases.v11.5.txt') as f:
     reader = csv.reader(f, delimiter="\t")
     salias = list(reader)
 
+print("Parsing protein-protein interactions data...")
 galias=dict()
 cint=dict()
 
@@ -39,6 +45,7 @@ for ge0 in ints:
     print('>',ge0,sep='',file=f)
     for ge1 in ints[ge0]:
         print(ge1,file=f)
-f.close() 
+f.close()
+print("Done")
 
         

@@ -24,7 +24,7 @@ def Tabt(gs,inv,interd,interc,invin,prop,tabt):
         else:tabt[g]=0
     return 1
 
-
+print('Reading localization data...')
 with open('data/location/uniprot.tsv') as f:
     reader = csv.reader(f, delimiter='\t')
     next(reader)
@@ -37,6 +37,7 @@ for uli in unip:
     if (('membrane' in l) or ('secreted' in l)): local[g]=1
     else: local[g]=0
     
+print('Reading protein-protein interactions data...')
 with open('data/interactions/interactions.tsv') as f:
     reader = csv.reader(f, delimiter='\t')
     interl = list(reader)
@@ -61,6 +62,7 @@ gset=(local.keys() & interc.keys())
 
 propll=dict()
 
+print('Reading expression in tissues data...')
 with open('data/tissues/E-MTAB-513-query-results.tpms.tsv') as f:
     reader = csv.reader(filter(lambda row: row[0]!='#',f), delimiter='\t')
     next(reader)
@@ -80,8 +82,13 @@ for g in gset:
     tabtll[g]=(propll[g]-propllave)/propllave
 
 tabt=dict()
+perc=dict()
+
 for dis in diseases:
     tabt[dis]=dict()
+    perc[dis]=dict()
+    
+    print('Reading differential expression data for '+dis+'...')
     with open('data/expression/'+dis+'_consensus.tsv') as f:
         reader = csv.reader(f, delimiter='\t')
         next(reader)
@@ -92,6 +99,7 @@ for dis in diseases:
         ave=cli[-1]
         if (abs(float(ave)) > 5): invex[g]=1
         
+    print('Reading GWAS data for '+dis+'...')
     with open('data/gwas/'+dis+'_genes.tsv') as f:
         reader = csv.reader(f, delimiter='\t')
         gwas=list(reader)
@@ -108,38 +116,57 @@ for dis in diseases:
     
 
     for g in gset:
-        tabt[dis][g]=max(local[g]*(tabtll.get(g)+tabtgs.get(g)*0+tabtex.get(g)),0)
+        tabt[dis][g]=max(local[g]*(tabtll.get(g)+tabtgs.get(g)+tabtex.get(g)),0)
+    glis=sorted(gset, key=tabt[dis].get,reverse=True)
     
+    tlen=len(glis)
+    
+    for i in range(0,tlen): perc[dis][glis[i]]=i/tlen*100
+    
+    print('Saving TABT ranking for '+dis+'...')
     with open('results/'+dis+'_tabt.tsv','w') as f: 
-        for g in gset:
+        print('Gene','# of interactions',
+                  '# of interactions with differentially expressed genes',
+                  'Proportion of interactions with differentially expressed genes',
+                  'Diff. expression component',
+                  '# of interactions with genes with disease-associated mutations',
+                  'Proportion of interactions with genes with disease-associated mutations',
+                  'Mutations component',                 
+                  '% of genes` expression in lypmh nodes and leukocytes',
+                  'Expression in tissues component',
+                  'Localization component',
+                  'TABT','% from top',sep='\t',file=f)
+        for g in glis:
             print(g,interc[g],
                   invinex[g],propex[g],tabtex[g],
                   invings[g],propgs[g],tabtgs[g],
                              propll[g],tabtll[g],
-                              local[g],tabt[dis][g],sep='\t',file=f)
+                              local[g],tabt[dis][g],perc[dis][g],sep='\t',file=f)
 
 
-tpercselfave=0
+print('Evaluating TABT ranking based on verified targets...')
 with open('results/evaluation.tsv','w') as f:
+    tpercselfave=0
     for dis in diseases:
+        print('Disease: '+dis,file=f)
+        print('Target','TABT','% from top',sep='\t',file=f)
         tlen=len(tabt[dis])
-        tabtperc={k:i/tlen for i,k in 
-                  enumerate(sorted(tabt[dis],key=tabt[dis].get,reverse=True))}
-        for distst in diseases:
-            with open('data/abs/'+distst+'_abs.tsv') as g:
-                reader = csv.reader(g, delimiter='\t')
-                tabs=list(reader)
-                tpercave=0
-            for tab in tabs: 
-                print(dis,distst,tab[0],tabt[dis][tab[0]],
-                      tabtperc[tab[0]],sep='\t',file=f)
-                tpercave+=tabtperc[tab[0]]
-            tpercave/=len(tabs)
-            if (dis==distst): tpercselfave+=tpercave
-            print('average:',dis,distst,tpercave,sep='\t',file=f)
+
+        with open('data/abs/'+dis+'_abs.tsv') as g:
+            reader = csv.reader(g, delimiter='\t')
+            tabs=list(reader)
+            tpercave=0
+        for tab in tabs: 
+            print(tab[0],tabt[dis][tab[0]],
+                  perc[dis][tab[0]],sep='\t',file=f)
+            tpercave+=perc[dis][tab[0]]
+        tpercave/=len(tabs)
+        tpercselfave+=tpercave
+        print('Average % from top: '+str(tpercave),file=f)
+        print(file=f)
     tpercselfave/=len(diseases)
     
-    print('Average:',tpercselfave,sep='\t',file=f)
+    print('Average % from top for '+','.join(diseases)+': '+str(tpercselfave),sep='\t',file=f)
     
-        
+print('Done')
         
