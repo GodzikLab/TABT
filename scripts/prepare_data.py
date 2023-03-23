@@ -13,7 +13,7 @@ dir=os.environ['TABT_DIR']
 
 print('Preparing protein-protein interactions data...')
 os.chdir(dir+'/data/interactions')
-print("Downloading STRING datasets...")
+print("Downloading STRING datasets - this may take several minutes...")
 
 urllib.request.urlretrieve("https://stringdb-static.org/download/protein.aliases.v11.5/9606.protein.aliases.v11.5.txt.gz","aliases.gz")
 urllib.request.urlretrieve("https://stringdb-static.org/download/protein.links.v11.5/9606.protein.links.v11.5.txt.gz","links.gz")

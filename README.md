@@ -35,7 +35,8 @@ data/tissues/E-MTAB-513-query-results.tpms.tsv - data on expression in human tis
 
 results/ - folder where TABT scores and TABT evaluation are saved
 results/_disease__tabt.tsv - full list of intermediate results, TABT score and ranking for _disease_
-results/evaluation.tsv - evaluation of TABT score based on rankings of verified antobody targest for ibd,pso,ra and sle
+results/test.tsv - evaluation of TABT score based on rankings of verified antobody targest for ibd,pso,ra and sle
+         (for the original tabt version average % from top for ibd,pso,ra,sle should be 1.08)
 
 scripts/ - all python programs used by TABT
 scripts/prepare_data.py - prepares interactions, expression, and GWAS data used by TABT

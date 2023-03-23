@@ -144,8 +144,8 @@ for dis in diseases:
                               local[g],tabt[dis][g],perc[dis][g],sep='\t',file=f)
 
 
-print('Evaluating TABT ranking based on verified targets...')
-with open('results/evaluation.tsv','w') as f:
+print('Testing TABT ranking based on verified targets...')
+with open('results/test.tsv','w') as f:
     tpercselfave=0
     for dis in diseases:
         print('Disease: '+dis,file=f)
@@ -157,16 +157,15 @@ with open('results/evaluation.tsv','w') as f:
             tabs=list(reader)
             tpercave=0
         for tab in tabs: 
-            print(tab[0],tabt[dis][tab[0]],
-                  perc[dis][tab[0]],sep='\t',file=f)
+            print(f"{tab[0]}\t{tabt[dis][tab[0]]:.2f}\t{perc[dis][tab[0]]:.2f}",file=f)
             tpercave+=perc[dis][tab[0]]
         tpercave/=len(tabs)
         tpercselfave+=tpercave
-        print('Average % from top: '+str(tpercave),file=f)
+        print('Average % from top: ',f"{tpercave:.2f}",file=f)
         print(file=f)
     tpercselfave/=len(diseases)
     
-    print('Average % from top for '+','.join(diseases)+': '+str(tpercselfave),sep='\t',file=f)
+    print('Average % from top for '+','.join(diseases)+': ',f"{tpercselfave:.2f}",sep='\t',file=f)
     
 print('Done')
         
