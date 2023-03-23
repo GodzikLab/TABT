@@ -24,7 +24,7 @@ data/gwas/_disease__genes.tsv - lists of genes with polymorphisms strongly assoc
 
 data/interactions/interactions.tsv - list of protein-protein interactions prepared based on data from the STRING database.
 	The input files (currently 9606.protein.links.v11.5.txt and 9606.protein.aliases.v11.5.txt)
-	are not included in the github repository due to the github's size limits -
+	are not included in the GitHub repository due to the GitHub's size limits -
         they are downloaded from STRING by the parse_interactions.py script instead.
 
 data/location/uniprot.tsv - SWISSPROT data for human proteins
@@ -35,8 +35,8 @@ data/tissues/E-MTAB-513-query-results.tpms.tsv - data on expression in human tis
 
 results/ - folder where TABT scores and TABT evaluation are saved
 results/_disease__tabt.tsv - full list of intermediate results, TABT score and ranking for _disease_
-results/test.tsv - evaluation of TABT score based on rankings of verified antobody targest for ibd,pso,ra and sle
-         (for the original tabt version average % from top for ibd,pso,ra,sle should be 1.08)
+results/test.tsv - results of the test of the TABT score based on rankings of verified antibody targets for ibd,pso,ra and sle
+         (for the original TABT version the average % from top for ibd,pso,ra,sle should be 1.08)
 
 scripts/ - all python programs used by TABT
 scripts/prepare_data.py - prepares interactions, expression, and GWAS data used by TABT
