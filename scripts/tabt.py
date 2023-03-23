@@ -97,9 +97,9 @@ for dis in diseases:
     for cli in consl:
         g=cli[0]
         ave=cli[-1]
-        if (abs(float(ave)) > 5): invex[g]=1
-        
+        if (abs(float(ave)) > 5): invex[g]=1  
     print('Reading GWAS data for '+dis+'...')
+    print('Number of differentially expressed genes for '+dis+':',len(invex))
     with open('data/gwas/'+dis+'_genes.tsv') as f:
         reader = csv.reader(f, delimiter='\t')
         gwas=list(reader)

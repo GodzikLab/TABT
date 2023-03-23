@@ -38,12 +38,15 @@ results/_disease__tabt.tsv - full list of intermediate results, TABT score and r
 results/evaluation.tsv - evaluation of TABT score based on rankings of verified antobody targest for ibd,pso,ra and sle
 
 scripts/ - all python programs used by TABT
-scripts/prep_*.py - preprocess expression, GWAS and interactions data used by TABT
-scripts/tabt.py - calculates TABT scores and evaluates them based on testing sets of therapeutic antibodies
+scripts/prepare_data.py - prepares interactions, expression, and GWAS data used by TABT
+scripts/tabt.py - calculates TABT scores and performs a test using targets of approved therapeutic antibodies
 
 To run TABT scripts, please create the environment variable TABT_DIR containing the name of the
 current TABT folder e.g., by adding the following line to your .bashrc in your home folder:
 
 export TABT_DIR="_full_path_of_tabt_folder_"
+
+Then run scripts scripts/prepare_data.py and scripts/tabt.py
+
 </pre>
 
